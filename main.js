@@ -54,7 +54,7 @@ ipc.on('runAppSpace', (event, args) => {
 	//createDynamicWindow(args + '/index.html');
 	var windowInfo = JSON.parse(fs.readFileSync(path.join(args, 'mainWindow.json')));
 	var newWindow = new BrowserWindow(windowInfo);
-	newWindow.loadFile(path.join(args,'/index.html'));
+	newWindow.loadFile(path.join(args,'index.html'));
 
 
 	event.returnValue = 'ok';
@@ -133,7 +133,7 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true
 		},
-		icon: path.join(__dirname , "icon.icns");
+		icon: path.join(__dirname , "icon.icns")
 	})
 
 	// and load the index.html of the app.

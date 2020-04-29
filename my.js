@@ -3,8 +3,8 @@ const {
 	BrowserWindow
 } = require('electron').remote
 
-let devHomeDirectory = __dirname + 'app_spaces_dev';
-let homeDirectory = __dirname + 'app_spaces';
+let devHomeDirectory = path.join(__dirname , 'app_spaces_dev');
+let homeDirectory = path.join(__dirname, 'app_spaces');
 
 
 function handleClick(filename) {
@@ -79,7 +79,7 @@ function runDevApp() {
 function deleteFolderRecursive(path) {
 	if (fs.existsSync(path)) {
 		fs.readdirSync(path).forEach((file, index) => {
-			const curPath = Path.join(path, file);
+			const curPath = path.join(path, file);
 			if (fs.lstatSync(curPath).isDirectory()) { // recurse
 				deleteFolderRecursive(curPath);
 			} else { // delete file
@@ -106,12 +106,15 @@ function selectCustomAppSpaceHome() {
 
 
 
-function getSubDirectories(path) {
+function getSubDirectories(_path) {
+	console.log(_path);
+	
 	var dirs = [];
-	var info = fs.readdirSync(path);
+	var info = fs.readdirSync(_path);
 	_.each(info, function(item) {
+		console.log('looking...');
 		if (item.substr(0, 1) != '.') {
-			if (Path.extname(path.join(path,item)) == '') {
+			if (path.extname(path.join(_path,item)) == '') {
 				dirs.push(item);
 			}
 		}
@@ -124,7 +127,7 @@ function getAppSpaces() {
 	var info = fs.readdirSync(devHomeDirectory);
 	_.each(info, function(item) {
 		if (item.substr(0, 1) != '.') {
-			if (Path.extname(path.join(devHomeDirectory,item)) == '') {
+			if (path.extname(path.join(devHomeDirectory,item)) == '') {
 				dirs.push(item);
 			}
 		}
