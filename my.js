@@ -3,17 +3,17 @@ const {
 	BrowserWindow
 } = require('electron').remote
 
-let devHomeDirectory = __dirname + '/app_spaces_dev/';
-let homeDirectory = __dirname + '/app_spaces/';
+let devHomeDirectory = __dirname + 'app_spaces_dev';
+let homeDirectory = __dirname + 'app_spaces';
 
 
 function handleClick(filename) {
 	let reply = ipc.sendSync('synMessage', filename);
 }
 
-function downloadZipFile(info) {
-	let reply = ipc.sendSync('downloadPackage', info);
-}
+// function downloadZipFile(info) {
+// 	let reply = ipc.sendSync('downloadPackage', info);
+// }
 
 function getAppReference() {
 	// let appRef = ipc.sendSync('getAppReference', '');
@@ -23,7 +23,7 @@ function getAppReference() {
 
 function doGitInstall() {
 	var appSpace = $('#customDevAppSpaces').val();
-	var cloneDir = homeDirectory + appSpace + '/';
+	var cloneDir = path.join(homeDirectory , appSpace);
 	var repoPath = $('#gitRepoUrl').val();
 
 	console.log(appSpace);
@@ -53,10 +53,10 @@ function runAppSpace(space) {
 	// const mainWindow = new BrowserWindow(contents);
 	// mainWindow.loadFile(devHomeDirectory + $('#customAppSpaces').val() + '/index.html')
 	if (space === 'apps') {
-		let reply = ipc.sendSync('runAppSpace', homeDirectory + '/' + $('#customAppSpaces').val());
+		let reply = ipc.sendSync('runAppSpace', path.join(homeDirectory , $('#customAppSpaces').val()));
 	}
 	if (space === 'devapps') {
-		let reply = ipc.sendSync('runAppSpace', devHomeDirectory + '/' + $('#customAppSpaces').val());
+		let reply = ipc.sendSync('runAppSpace', path.join(devHomeDirectory , $('#customAppSpaces').val()));
 	}
 
 }
@@ -111,7 +111,7 @@ function getSubDirectories(path) {
 	var info = fs.readdirSync(path);
 	_.each(info, function(item) {
 		if (item.substr(0, 1) != '.') {
-			if (Path.extname(path + '/' + item) == '') {
+			if (Path.extname(path.join(path,item)) == '') {
 				dirs.push(item);
 			}
 		}
@@ -124,7 +124,7 @@ function getAppSpaces() {
 	var info = fs.readdirSync(devHomeDirectory);
 	_.each(info, function(item) {
 		if (item.substr(0, 1) != '.') {
-			if (Path.extname(devHomeDirectory + '/' + item) == '') {
+			if (Path.extname(path.join(devHomeDirectory,item)) == '') {
 				dirs.push(item);
 			}
 		}
@@ -150,25 +150,25 @@ function createAppSpace() {
 
 function deleteAppSpace() {
 	var appSpaceName = $('#customAppSpaces').val();
-	var path = __dirname + devHomeDirectory + appSpaceName;
+	var path = path.join(__dirname, devHomeDirectory , appSpaceName);
 	deleteFolderRecursive(path);
 }
 
-function installStarterApp() {
-	const directory = devHomeDirectory;
-	let startName = $('#startAppDropDown').val();
-	const sourceDirectory = __dirname + '/package_dev_starters/' + startName;
-	const path = directory;
-
-	var resp = deleteFolderRecursive(directory)
-
-	ncp.limit = 16;
-	ncp(sourceDirectory, directory, function(err) {
-		if (err) {
-			return console.error(err);
-		}
-		console.log('done!');
-	});
-}
+// function installStarterApp() {
+// 	const directory = devHomeDirectory;
+// 	let startName = $('#startAppDropDown').val();
+// 	const sourceDirectory = __dirname + '/package_dev_starters/' + startName;
+// 	const path = directory;
+// 
+// 	var resp = deleteFolderRecursive(directory)
+// 
+// 	ncp.limit = 16;
+// 	ncp(sourceDirectory, directory, function(err) {
+// 		if (err) {
+// 			return console.error(err);
+// 		}
+// 		console.log('done!');
+// 	});
+// }
 
 const ipc = require('electron').ipcRenderer

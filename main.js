@@ -52,9 +52,9 @@ ipc.on('runDevApp', (event, args) => {
 ipc.on('runAppSpace', (event, args) => {
 
 	//createDynamicWindow(args + '/index.html');
-	var windowInfo = JSON.parse(fs.readFileSync(args + '/mainWindow.json'));
+	var windowInfo = JSON.parse(fs.readFileSync(path.join(args, 'mainWindow.json')));
 	var newWindow = new BrowserWindow(windowInfo);
-	newWindow.loadFile(args + '/index.html')
+	newWindow.loadFile(path.join(args,'/index.html'));
 
 
 	event.returnValue = 'ok';
@@ -71,55 +71,55 @@ ipc.on('setAppSpaceHome', (event, args) => {
 
 
 
-function downloadAndExtractZip(args) {
-	var packageName = args.packageName;
-	var url = args.url;
-	var dir = __dirname + "/packages/" + packageName;
-	if (!fs.existsSync(dir)) {
-		fs.mkdirSync(dir);
-	}
-
-	const file = fs.createWriteStream(dir + '/package.zip');
-	http.get(url, response => {
-		var stream = response.pipe(file);
-		stream.on("finish", function() {
-			console.log("done");
-			decompressZip(args);
-		});
-	});
-}
-
-
-function decompressZip(args) {
-
-	var packageName = args.packageName;
-	var dir = __dirname + "/packages/" + packageName;
-	var unzipper = new DecompressZip(dir + '/package.zip');
-
-	unzipper.on('error', function(err) {
-		console.log('Caught an error');
-		console.log(err);
-	});
-
-	unzipper.on('extract', function(log) {
-		console.log('Finished extracting');
-		console.log(log);
-		fs.unlinkSync(dir + '/package.zip');
-		createDynamicWindow(dir + '/index.html');
-	});
-
-	unzipper.on('progress', function(fileIndex, fileCount) {
-		console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
-	});
+// function downloadAndExtractZip(args) {
+// 	var packageName = args.packageName;
+// 	var url = args.url;
+// 	var dir = __dirname + "/packages/" + packageName;
+// 	if (!fs.existsSync(dir)) {
+// 		fs.mkdirSync(dir);
+// 	}
+// 
+// 	const file = fs.createWriteStream(dir + '/package.zip');
+// 	http.get(url, response => {
+// 		var stream = response.pipe(file);
+// 		stream.on("finish", function() {
+// 			console.log("done");
+// 			decompressZip(args);
+// 		});
+// 	});
+// }
 
 
-	unzipper.extract({
-		path: dir,
-		filter: function(file) {
-			return file.type !== "SymbolicLink";
-		}
-	});
-}
+// function decompressZip(args) {
+// 
+// 	var packageName = args.packageName;
+// 	var dir = __dirname + "/packages/" + packageName;
+// 	var unzipper = new DecompressZip(dir + '/package.zip');
+// 
+// 	unzipper.on('error', function(err) {
+// 		console.log('Caught an error');
+// 		console.log(err);
+// 	});
+// 
+// 	unzipper.on('extract', function(log) {
+// 		console.log('Finished extracting');
+// 		console.log(log);
+// 		fs.unlinkSync(dir + '/package.zip');
+// 		createDynamicWindow(dir + '/index.html');
+// 	});
+// 
+// 	unzipper.on('progress', function(fileIndex, fileCount) {
+// 		console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
+// 	});
+// 
+// 
+// 	unzipper.extract({
+// 		path: dir,
+// 		filter: function(file) {
+// 			return file.type !== "SymbolicLink";
+// 		}
+// 	});
+// }
 
 function createWindow() {
 	// Create the browser window.
@@ -133,7 +133,7 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true
 		},
-		icon: __dirname + "/icon.icns"
+		icon: path.join(__dirname , "icon.icns");
 	})
 
 	// and load the index.html of the app.
