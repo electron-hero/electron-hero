@@ -1,0 +1,46 @@
+.window-content {
+    background-color: #f0f0f0;
+}
+
+.vertical-space {
+    height: 20px;
+}
+
+.form-group {
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+.hint-text {
+    color: #999;
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+input:focus {
+    outline: none;
+    margin: 5px;
+}
+
+label {
+    white-space: wrap;
+    height: auto;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 0px;
+}
+
+.form-control {
+    margin: 5px;
+    padding: 5px;
+    margin-right: 15px;
+    width: 95%;
+}
+
+.h2 {
+    font-size: 16px;
+}
+
+.form-control-relative {
+    width: 60%;
+}

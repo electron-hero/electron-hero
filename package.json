@@ -1,0 +1,38 @@
+{
+    "name": "electron-hero",
+    "version": "1.0.0",
+    "description": "A minimal Electron application",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "repository": "https://github.com/electron/electron-quick-start",
+    "keywords": [
+        "Electron",
+        "quick",
+        "start",
+        "tutorial",
+        "demo"
+    ],
+    "author": "GitHub",
+    "license": "CC0-1.0",
+    "devDependencies": {
+        "electron": "^8.2.0"
+    },
+    "dependencies": {
+        "auth0-js": "^9.13.2",
+        "auth0-lock": "^11.23.1",
+        "decompress-zip": "^0.2.2",
+        "electron-tree-view": "^1.1.0",
+        "http": "0.0.1-security",
+        "jquery": "^3.4.1",
+        "js-beautify": "^1.11.0",
+        "lodash": "^4.17.15",
+        "moment": "^2.24.0",
+        "ncp": "^2.0.0",
+        "shelljs": "^0.8.3",
+        "simple-git": "^1.132.0",
+        "stream": "0.0.2",
+        "url": "^0.11.0"
+    }
+}

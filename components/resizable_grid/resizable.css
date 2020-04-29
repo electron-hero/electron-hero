@@ -1,0 +1,47 @@
+BODY {
+    background-color: #ddd;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+table {
+    border-collapse: collapse;
+    background-color: white;
+}
+
+th {
+    background-color: #c0e6f7;
+}
+
+td, th {
+    /* top, right, bottom, and left  */
+    padding: 2px 2px 2px 5px;
+    text-align: left;
+}
+
+table, th, td {
+    color: #222;
+    font-size: 13px;
+}
+
+td {
+    color: #666;
+}
+
+th, tr:not(:last-child)>td {
+    border-bottom: 1px solid #ddd;
+}
+
+td:not(:first-child) {
+    border-left: 1px solid #ddd;
+}
+
+.columnSelector {
+    border-right: 1px solid #0000f;
+}
+
+table {
+    border: 1px solid #999;
+}
