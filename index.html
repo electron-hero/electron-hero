@@ -17,13 +17,15 @@
     <!-- Javascript -->
     <!-- <script src="js/menu.js" charset="utf-8"></script> -->
     <script>
+
         window.$ = window.jQuery = require('jquery');
         const fs = require('fs');
         const path = require('path');
         const ncp = require('ncp');
         const shell = require('shelljs');
         const _ = require('lodash');
-        const git = require('simple-git');
+        let homeDirectory = path.join(__dirname, 'app_spaces');
+        const git = require('simple-git')(homeDirectory);
     </script>
     <script src="my.js" charset="utf-8"></script>
 
@@ -104,6 +106,7 @@
         //devHomeDirectory = getPreference('electron-hero-dev-directory') + '/';
         //$('#customAppSpacesHome').val(devHomeDirectory);
         let reply;
+        console.log(homeDirectory);
         reply = getSubDirectories(homeDirectory);
         _.each(reply, function(item) {
             if (item.substr(0, 1) != '.') {
@@ -111,12 +114,12 @@
             }
         })
 
-        reply = getSubDirectories(devHomeDirectory);
-        _.each(reply, function(item) {
-            if (item.substr(0, 1) != '.') {
-                $('#customDevAppSpaces').append(`<option value="${item}">${item}</option>`);
-            }
-        })
+        // reply = getSubDirectories(devHomeDirectory);
+        // _.each(reply, function(item) {
+        //     if (item.substr(0, 1) != '.') {
+        //         $('#customDevAppSpaces').append(`<option value="${item}">${item}</option>`);
+        //     }
+        // })
 
 
     });

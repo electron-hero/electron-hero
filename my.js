@@ -4,7 +4,6 @@ const {
 } = require('electron').remote
 
 let devHomeDirectory = path.join(__dirname , 'app_spaces_dev');
-let homeDirectory = path.join(__dirname, 'app_spaces');
 
 
 function handleClick(filename) {
@@ -23,11 +22,12 @@ function getAppReference() {
 
 function doGitInstall() {
 	var appSpace = $('#customAppSpaces').val();
-	var cloneDir = path.join(homeDirectory , appSpace);
+	//var cloneDir = path.join(homeDirectory , appSpace);
+	var cloneDir = path.join(homeDirectory);
 	var repoPath = $('#gitRepoUrl').val();
 
 	console.log(appSpace);
-	if (appSpace === "") {
+	if (!appSpace) {
 		alert('Please select a valid space');
 		return;
 	}
