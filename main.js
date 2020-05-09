@@ -55,8 +55,6 @@ ipc.on('runAppSpace', (event, args) => {
 	var windowInfo = JSON.parse(fs.readFileSync(path.join(args, 'mainWindow.json')));
 	var newWindow = new BrowserWindow(windowInfo);
 	newWindow.loadFile(path.join(args,'index.html'));
-
-
 	event.returnValue = 'ok';
 
 });

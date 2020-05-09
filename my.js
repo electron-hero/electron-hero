@@ -22,7 +22,7 @@ function getAppReference() {
 }
 
 function doGitInstall() {
-	var appSpace = $('#customDevAppSpaces').val();
+	var appSpace = $('#customAppSpaces').val();
 	var cloneDir = path.join(homeDirectory , appSpace);
 	var repoPath = $('#gitRepoUrl').val();
 
