@@ -27,18 +27,19 @@ function doGitInstall() {
 	var repoPath = $('#gitRepoUrl').val();
 
 	console.log(appSpace);
-	if (!appSpace) {
-		alert('Please select a valid space');
-		return;
-	}
-	var files = fs.readdirSync(cloneDir);
-	if (files.length > 0) {
-		alert('App space ' + appSpace + ' is not empty.  Please delete all files in directory and hit install again');
-		return;
-	}
+	// if (!appSpace) {
+	// 	alert('Please select a valid space');
+	// 	return;
+	// }
+	
+	// var files = fs.readdirSync(cloneDir);
+	// if (files.length > 0) {
+	// 	alert('App space ' + appSpace + ' is not empty.  Please delete all files in directory and hit install again');
+	// 	return;
+	// }
 
 
-	git().clone(repoPath, cloneDir, null, function(err, data) {
+	git.clone(repoPath, function(err, data) {
 		if (err) {
 			alert(err);
 		} else {

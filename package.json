@@ -1,10 +1,12 @@
 {
     "name": "electron-hero",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A minimal Electron application",
     "main": "main.js",
     "scripts": {
-        "start": "electron ."
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make"
     },
     "repository": "https://github.com/electron/electron-quick-start",
     "keywords": [
@@ -17,12 +19,18 @@
     "author": "GitHub",
     "license": "CC0-1.0",
     "devDependencies": {
+        "@electron-forge/cli": "^6.0.0-beta.51",
+        "@electron-forge/maker-deb": "^6.0.0-beta.51",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.51",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.51",
+        "@electron-forge/maker-zip": "^6.0.0-beta.51",
         "electron": "^8.2.0"
     },
     "dependencies": {
         "auth0-js": "^9.13.2",
         "auth0-lock": "^11.23.1",
         "decompress-zip": "^0.2.2",
+        "electron-squirrel-startup": "^1.0.0",
         "electron-tree-view": "^1.1.0",
         "http": "0.0.1-security",
         "jquery": "^3.5.0",
@@ -35,5 +43,31 @@
         "stream": "0.0.2",
         "url": "^0.11.0",
         "xml-formatter": "^2.0.1"
+    },
+    "config": {
+        "forge": {
+            "packagerConfig": {},
+            "makers": [{
+                    "name": "@electron-forge/maker-squirrel",
+                    "config": {
+                        "name": "electron_hero"
+                    }
+                },
+                {
+                    "name": "@electron-forge/maker-zip",
+                    "platforms": [
+                        "darwin"
+                    ]
+                },
+                {
+                    "name": "@electron-forge/maker-deb",
+                    "config": {}
+                },
+                {
+                    "name": "@electron-forge/maker-rpm",
+                    "config": {}
+                }
+            ]
+        }
     }
 }
