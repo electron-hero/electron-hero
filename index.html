@@ -7,15 +7,8 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/photon.css">
     <link rel="stylesheet" href="css/electron-hero.css">
-
-    <!-- <script src="components/resizable_grid/resizable.js"></script> -->
     <script src="components/utils/index.js"></script>
 
-    <!-- <link rel="stylesheet" href="components/resizable_grid/resizable.css"> -->
-
-
-    <!-- Javascript -->
-    <!-- <script src="js/menu.js" charset="utf-8"></script> -->
     <script>
 
         window.$ = window.jQuery = require('jquery');
@@ -39,29 +32,9 @@
 
 <body>
     <div class="window">
-
-        <!-- .toolbar-header sits at the top of your app -->
-        <!-- <header class="toolbar toolbar-header">
-            <h1 class="title">Photon</h1>
-        </header> -->
-
         <!-- Your app's content goes inside .window-content -->
         <div class="window-content">
             <div class="pane-group">
-                <!-- <div class="pane pane-sm sidebar">
-                    <nav class="nav-group">
-                        <h5 class="nav-group-title">Favorites</h5>
-                        <span class="nav-group-item">
-                            <span class="icon icon-home"></span>
-                            connors
-                        </span>
-                        <span class="nav-group-item active">
-                            <span class="icon icon-light-up"></span>
-                            Photon
-                        </span>
-                    </nav>
-                </div> -->
-
                 <div class="pane content-pane">
 
                     <div class="form-group">
@@ -80,20 +53,6 @@
                             <button class="btn btn-large btn-positive" onclick="doGitInstall()">Install</button>&nbsp;
                         </div>
                     </div>
-                    <!-- <div class="form-group">
-                        <label class="h2">Dev App Spaces</label>
-                        <div class="hint-text">Dev App Spaces are apps you are developing in Electron-Hero</div>
-                        <div>
-                            <select id='customDevAppSpaces' class='form-control form-control-relative'>
-                                <option value='addNewSpace'>Select Space</option>
-                            </select>
-                            <button class="btn btn-large btn-primary" onclick="runAppSpace('devapps')">Run</button>
-                            <button class="btn btn-large btn-positive" onclick="openFinderWinow('devapps')">Show in Finder</button>
-                        </div>
-                        <div class='hint-text'>Hint: to add new space, use 'Show in Finder', create new directory and CTRL-R electron-hero.</div><br>
-                    </div> -->
-
-
                 </div>
             </div>
         </div>
@@ -103,8 +62,6 @@
 
 <script>
     $(document).ready(function() {
-        //devHomeDirectory = getPreference('electron-hero-dev-directory') + '/';
-        //$('#customAppSpacesHome').val(devHomeDirectory);
         let reply;
         console.log(homeDirectory);
         reply = getSubDirectories(homeDirectory);
@@ -113,15 +70,6 @@
                 $('#customAppSpaces').append(`<option value="${item}">${item}</option>`);
             }
         })
-
-        // reply = getSubDirectories(devHomeDirectory);
-        // _.each(reply, function(item) {
-        //     if (item.substr(0, 1) != '.') {
-        //         $('#customDevAppSpaces').append(`<option value="${item}">${item}</option>`);
-        //     }
-        // })
-
-
     });
 </script>
 
