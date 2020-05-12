@@ -5,6 +5,17 @@ const {
 
 let devHomeDirectory = path.join(__dirname , 'app_spaces_dev');
 
+function appDropDownChange() {
+	
+	let workingDirectory = path.join(__dirname, 'app_spaces', $('#customAppSpaces').val() )
+	console.log(workingDirectory);
+	git.cwd(workingDirectory)
+	git.status(function(err, data){
+		console.log(data);
+	})
+}
+
+
 
 function handleClick(filename) {
 	let reply = ipc.sendSync('synMessage', filename);
@@ -21,24 +32,9 @@ function getAppReference() {
 }
 
 function doGitInstall() {
-	var appSpace = $('#customAppSpaces').val();
-	//var cloneDir = path.join(homeDirectory , appSpace);
-	var cloneDir = path.join(homeDirectory);
-	var repoPath = $('#gitRepoUrl').val();
-
-	console.log(appSpace);
-	// if (!appSpace) {
-	// 	alert('Please select a valid space');
-	// 	return;
-	// }
 	
-	// var files = fs.readdirSync(cloneDir);
-	// if (files.length > 0) {
-	// 	alert('App space ' + appSpace + ' is not empty.  Please delete all files in directory and hit install again');
-	// 	return;
-	// }
-
-
+	git.cwd(path.join(__dirname, 'app_spaces'))
+	var repoPath = $('#gitRepoUrl').val();
 	git.clone(repoPath, function(err, data) {
 		if (err) {
 			alert(err);

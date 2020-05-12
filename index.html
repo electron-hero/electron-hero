@@ -41,7 +41,7 @@
                         <label class="h2">App Spaces</label>
                         <div class="hint-text">App Spaces are apps you have installed from a git repo and run as-is. If you need a new app space, use "Show in Finder", create a new directory and then CTRL-R in electron-hero.</div>
                         <div>
-                            <select id='customAppSpaces' class='form-control form-control-relative'>
+                            <select onchange="appDropDownChange()" id='customAppSpaces' class='form-control form-control-relative'>
                                 <option value=''>Select Space</option>
                             </select>
                             <button class="btn btn-large btn-primary" onclick="runAppSpace('apps')">Run</button>
@@ -63,7 +63,7 @@
 <script>
     $(document).ready(function() {
         let reply;
-        console.log(homeDirectory);
+
         reply = getSubDirectories(homeDirectory);
         _.each(reply, function(item) {
             if (item.substr(0, 1) != '.') {
