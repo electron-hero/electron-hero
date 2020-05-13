@@ -31,17 +31,43 @@ function getAppReference() {
 	alert(app);
 }
 
+
+function downloadFile(filename) {
+	// var req = request({
+	// 	method:'GET',
+	// 	uri: filename
+	// })
+	// var out = fs.createWriteStream(path.join(__dirname,'downloads','package.zip'));
+	// req.pipe(out);
+	// req.on('end', function(){
+	// 	console.log('all done');
+	// 	var appName = $('#gitRepoUrl').val().split('/').pop();
+	// 	console.log(appName);
+	// })
+}
+
 function doGitInstall() {
 	
 	git.cwd(path.join(__dirname, 'app_spaces'))
-	var repoPath = $('#gitRepoUrl').val();
-	git.clone(repoPath, function(err, data) {
-		if (err) {
-			alert(err);
-		} else {
-			alert('App installed successfully')
-		}
-	})
+	var downloadUrl = $('#gitRepoUrl').val() + '/archive/master.zip';
+	console.log(downloadUrl);
+	downloadFile(downloadUrl);
+	var info = {
+		packageName: $('#gitRepoUrl').val().split('/').pop(),
+		url: downloadUrl
+	}
+	console.log(info);
+	let reply = ipc.sendSync('downloadPackage', info);
+	
+
+
+	// git.clone(repoPath, function(err, data) {
+	// 	if (err) {
+	// 		alert(err);
+	// 	} else {
+	// 		alert('App installed successfully')
+	// 	}
+	// })
 
 }
 

@@ -4,7 +4,10 @@ const {
 	BrowserWindow
 } = require('electron')
 const path = require('path')
+const request = require("request");
 const ipc = require('electron').ipcMain;
+const ncp = require('ncp');
+const rimraf = require("rimraf");
 
 var http = require('http');
 var fs = require('fs');
@@ -13,6 +16,8 @@ var _ = require('lodash');
 var moment = require('moment');
 var Stream = require('stream').Transform;
 var DecompressZip = require('decompress-zip');
+const extract = require('extract-zip')
+
 var mainWindow;
 var devSpaceHome;
 
@@ -33,8 +38,8 @@ ipc.on('downloadPackage', (event, args) => {
 });
 
 ipc.on('runDevApp', (event, args) => {
-	
-	
+
+
 	const dynamicWindow = new BrowserWindow({
 		width: 1600,
 		height: 600,
@@ -54,7 +59,7 @@ ipc.on('runAppSpace', (event, args) => {
 	//createDynamicWindow(args + '/index.html');
 	var windowInfo = JSON.parse(fs.readFileSync(path.join(args, 'mainWindow.json')));
 	var newWindow = new BrowserWindow(windowInfo);
-	newWindow.loadFile(path.join(args,'index.html'));
+	newWindow.loadFile(path.join(args, 'index.html'));
 	event.returnValue = 'ok';
 
 });
@@ -69,55 +74,94 @@ ipc.on('setAppSpaceHome', (event, args) => {
 
 
 
-// function downloadAndExtractZip(args) {
-// 	var packageName = args.packageName;
-// 	var url = args.url;
-// 	var dir = __dirname + "/packages/" + packageName;
-// 	if (!fs.existsSync(dir)) {
-// 		fs.mkdirSync(dir);
-// 	}
-// 
-// 	const file = fs.createWriteStream(dir + '/package.zip');
-// 	http.get(url, response => {
-// 		var stream = response.pipe(file);
-// 		stream.on("finish", function() {
-// 			console.log("done");
-// 			decompressZip(args);
-// 		});
-// 	});
-// }
+function downloadAndExtractZip(args) {
+	var packageName = args.packageName;
+	var url = args.url;
+
+	console.log(packageName);
+	console.log(url);
+
+	var dir = path.join(__dirname, "app_spaces", packageName + '');
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir);
+	}
+
+	// const file = fs.createWriteStream(dir + '/package.zip');
+	// http.get(url, response => {
+	// 	var stream = response.pipe(file);
+	// 	stream.on("finish", function() {
+	// 		console.log("done");
+	// 		decompressZip(args);
+	// 	});
+	// });
+	var req = request({
+		method: 'GET',
+		uri: url
+	})
+	var out = fs.createWriteStream(path.join(__dirname, 'downloads', 'package.zip'));
+	req.pipe(out);
+	req.on('end', function() {
+		console.log('all done');
+		var appName = packageName
+		console.log(appName);
+		decompressZip(args);
+	})
 
 
-// function decompressZip(args) {
-// 
-// 	var packageName = args.packageName;
-// 	var dir = __dirname + "/packages/" + packageName;
-// 	var unzipper = new DecompressZip(dir + '/package.zip');
-// 
-// 	unzipper.on('error', function(err) {
-// 		console.log('Caught an error');
-// 		console.log(err);
-// 	});
-// 
-// 	unzipper.on('extract', function(log) {
-// 		console.log('Finished extracting');
-// 		console.log(log);
-// 		fs.unlinkSync(dir + '/package.zip');
-// 		createDynamicWindow(dir + '/index.html');
-// 	});
-// 
-// 	unzipper.on('progress', function(fileIndex, fileCount) {
-// 		console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
-// 	});
-// 
-// 
-// 	unzipper.extract({
-// 		path: dir,
-// 		filter: function(file) {
-// 			return file.type !== "SymbolicLink";
-// 		}
-// 	});
-// }
+}
+
+
+function decompressZip(args) {
+
+	console.log('here in decompressZip')
+	var packageName = args.packageName;
+	var dir = path.join(__dirname, "downloads");
+
+	var unzipper = new DecompressZip(path.join(dir, 'package.zip'));
+
+	unzipper.on('error', function(err) {
+		console.log('Caught an error');
+		console.log(err);
+	});
+
+	unzipper.on('extract', function(log) {
+		console.log('Finished extracting');
+		console.log(log);
+
+		var sourceDirectory = path.join(__dirname, 'downloads', packageName + '-master');
+		var directory = path.join(__dirname, 'app_spaces', packageName)
+		ncp.limit = 16;
+		ncp(sourceDirectory, directory, function(err) {
+			if (err) {
+				return console.error(err);
+			}
+			console.log('done!');
+			fs.unlinkSync(path.join(dir, 'package.zip'));
+			rimraf(sourceDirectory, function() {
+				console.log("done");
+			});
+
+
+		});
+		//fs.unlinkSync(path.join(dir,'package.zip'));
+		//createDynamicWindow(path.join(dir,'index.html'));
+	});
+
+	unzipper.on('progress', function(fileIndex, fileCount) {
+		console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
+	});
+
+
+	console.log('unizipping to ');
+	console.log(dir);
+	unzipper.extract({
+		path: dir,
+		filter: function(file) {
+			return file.type !== "SymbolicLink";
+		}
+	});
+
+}
 
 function createWindow() {
 	// Create the browser window.
@@ -131,7 +175,7 @@ function createWindow() {
 		webPreferences: {
 			nodeIntegration: true
 		},
-		icon: path.join(__dirname , "icon.icns")
+		icon: path.join(__dirname, "icon.icns")
 	})
 
 	// and load the index.html of the app.
