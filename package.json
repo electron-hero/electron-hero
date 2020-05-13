@@ -1,7 +1,7 @@
 {
-    "name": "electron-hero",
+    "name": "ElectronHero",
     "version": "1.0.1",
-    "description": "A minimal Electron application",
+    "description": "An experiment in efficiency",
     "main": "main.js",
     "scripts": {
         "start": "electron-forge start",
@@ -16,7 +16,7 @@
         "tutorial",
         "demo"
     ],
-    "author": "GitHub",
+    "author": "andersjj@yahoo.com",
     "license": "CC0-1.0",
     "devDependencies": {
         "@electron-forge/cli": "^6.0.0-beta.51",
@@ -39,6 +39,7 @@
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
         "ncp": "^2.0.0",
+        "request": "^2.88.2",
         "rimraf": "^3.0.2",
         "shelljs": "^0.8.3",
         "simple-git": "^1.132.0",
@@ -48,9 +49,13 @@
     },
     "config": {
         "forge": {
-            "packagerConfig": {},
-            "makers": [
-                {
+            "packagerConfig": {
+                "ignore": [
+                    "app_spaces"
+                ],
+                "icon": "icons/app_icon.icns"
+            },
+            "makers": [{
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
                         "name": "electron_hero"

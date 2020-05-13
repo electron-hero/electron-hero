@@ -8,11 +8,6 @@ let devHomeDirectory = path.join(__dirname , 'app_spaces_dev');
 function appDropDownChange() {
 	
 	let workingDirectory = path.join(__dirname, 'app_spaces', $('#customAppSpaces').val() )
-	console.log(workingDirectory);
-	git.cwd(workingDirectory)
-	git.status(function(err, data){
-		console.log(data);
-	})
 }
 
 
@@ -48,7 +43,7 @@ function downloadFile(filename) {
 
 function doGitInstall() {
 	
-	git.cwd(path.join(__dirname, 'app_spaces'))
+	// git.cwd(path.join(__dirname, 'app_spaces'))
 	var downloadUrl = $('#gitRepoUrl').val() + '/archive/master.zip';
 	console.log(downloadUrl);
 	downloadFile(downloadUrl);

@@ -45,7 +45,9 @@ ipc.on('runDevApp', (event, args) => {
 		height: 600,
 		webPreferences: {
 			nodeIntegration: true
-		}
+		},
+		icon: path.join(__dirname, 'icons', 'app_icon.icns')
+
 	})
 	// and load the index.html of the app.
 	dynamicWindow.loadFile(args + '/index.html')
@@ -179,7 +181,14 @@ function createWindow() {
 	})
 
 	// and load the index.html of the app.
+	var dir = path.join(__dirname , 'app_spaces');
+	if (!fs.existsSync(dir)){
+	    fs.mkdirSync(dir);
+	}
+
+
 	mainWindow.loadFile('index.html')
+
 
 	// Open the DevTools.
 	// mainWindow.webContents.openDevTools()
