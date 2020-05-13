@@ -21,6 +21,7 @@ const extract = require('extract-zip')
 var mainWindow;
 var devSpaceHome;
 
+var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
 
 ipc.on('getAppReference', (event, args) => {
 	event.returnValue = app;
@@ -83,7 +84,7 @@ function downloadAndExtractZip(args) {
 	console.log(packageName);
 	console.log(url);
 
-	var dir = path.join(__dirname, "app_spaces", packageName + '');
+	var dir = path.join(appSpaceHome, packageName + '');
 	if (!fs.existsSync(dir)) {
 		fs.mkdirSync(dir);
 	}
@@ -100,7 +101,7 @@ function downloadAndExtractZip(args) {
 		method: 'GET',
 		uri: url
 	})
-	var out = fs.createWriteStream(path.join(__dirname, 'downloads', 'package.zip'));
+	var out = fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip'));
 	req.pipe(out);
 	req.on('end', function() {
 		console.log('all done');
@@ -117,7 +118,7 @@ function decompressZip(args) {
 
 	console.log('here in decompressZip')
 	var packageName = args.packageName;
-	var dir = path.join(__dirname, "downloads");
+	var dir = path.join(appSpaceHome, "downloads");
 
 	var unzipper = new DecompressZip(path.join(dir, 'package.zip'));
 
@@ -130,8 +131,8 @@ function decompressZip(args) {
 		console.log('Finished extracting');
 		console.log(log);
 
-		var sourceDirectory = path.join(__dirname, 'downloads', packageName + '-master');
-		var directory = path.join(__dirname, 'app_spaces', packageName)
+		var sourceDirectory = path.join(appSpaceHome, 'downloads', packageName + '-master');
+		var directory = path.join(appSpaceHome, packageName)
 		ncp.limit = 16;
 		ncp(sourceDirectory, directory, function(err) {
 			if (err) {
@@ -181,9 +182,10 @@ function createWindow() {
 	})
 
 	// and load the index.html of the app.
-	var dir = path.join(__dirname , 'app_spaces');
+	var dir = appSpaceHome;
 	if (!fs.existsSync(dir)){
 	    fs.mkdirSync(dir);
+		fs.mkdirSync(path.join(dir, 'downloads'));
 	}
 
 

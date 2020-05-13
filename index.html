@@ -18,7 +18,7 @@
         const shell = require('shelljs');
         const _ = require('lodash');
         const request = require('request');
-        let homeDirectory = path.join(__dirname, 'app_spaces');
+        const app = require('electron').remote.app
     </script>
     <script src="my.js" charset="utf-8"></script>
 
@@ -63,6 +63,7 @@
 <script>
     $(document).ready(function() {
         let reply;
+        let homeDirectory = path.join(app.getPath('documents'), 'electron_hero_apps');
 
         reply = getSubDirectories(homeDirectory);
         _.each(reply, function(item) {

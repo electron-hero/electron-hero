@@ -1,9 +1,10 @@
 const {
 	dialog,
-	BrowserWindow
+	BrowserWindow,
 } = require('electron').remote
 
 let devHomeDirectory = path.join(__dirname , 'app_spaces_dev');
+let homeDirectory = path.join(app.getPath('documents'), 'electron_hero_apps');
 
 function appDropDownChange() {
 	
