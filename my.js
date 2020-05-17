@@ -4,7 +4,15 @@ const {
 } = require('electron').remote
 
 let devHomeDirectory = path.join(__dirname , 'app_spaces_dev');
-let homeDirectory = path.join(app.getPath('documents'), 'electron_hero_apps');
+
+
+// this is the path used for builds
+//let homeDirectory = path.join(app.getPath('documents'), 'electron_hero_apps');
+// this is the path used for development
+let homeDirectory = path.join(__dirname, 'app_spaces');
+
+
+
 
 function appDropDownChange() {
 	
