@@ -39,6 +39,7 @@
         "lodash": "^4.17.15",
         "moment": "^2.24.0",
         "ncp": "^2.0.0",
+        "path": "^0.12.7",
         "request": "^2.88.2",
         "rimraf": "^3.0.2",
         "shelljs": "^0.8.3",
@@ -55,7 +56,8 @@
                 ],
                 "icon": "icons/app_icon.icns"
             },
-            "makers": [{
+            "makers": [
+                {
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
                         "name": "electron_hero"
