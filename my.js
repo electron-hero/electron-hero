@@ -13,7 +13,6 @@ let homeDirectory = path.join(__dirname, 'app_spaces');
 
 
 
-
 function appDropDownChange() {
 	
 	let workingDirectory = path.join(__dirname, 'app_spaces', $('#customAppSpaces').val() )

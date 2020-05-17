@@ -23,10 +23,15 @@ var devSpaceHome;
 
 var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
 
+let homeRequirePath = __dirname + path.sep;
+
+ipc.on('getRequirePath', (event, args) => {
+	event.returnValue = homeRequirePath;
+});
+
 ipc.on('getAppReference', (event, args) => {
 	event.returnValue = app;
 });
-
 
 ipc.on('synMessage', (event, args) => {
 	event.returnValue = args;
