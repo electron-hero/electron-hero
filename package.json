@@ -1,6 +1,6 @@
 {
     "name": "ElectronHero",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "An experiment in efficiency",
     "main": "main.js",
     "scripts": {
