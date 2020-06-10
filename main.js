@@ -22,9 +22,9 @@ var mainWindow;
 var devSpaceHome;
 
 // this is used when building for publish
-//var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
+var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
 // this is used to point to the source files under source control
-var appSpaceHome = path.join(__dirname, 'app_spaces');
+//var appSpaceHome = path.join(__dirname, 'app_spaces');
 
 
 let homeRequirePath = __dirname + path.sep;
@@ -110,12 +110,20 @@ function downloadAndExtractZip(args) {
 		method: 'GET',
 		uri: url
 	})
+	
+	var downloadDir = path.join(appSpaceHome, 'downloads');
+	if (!fs.existsSync(downloadDir)) {
+		fs.mkdirSync(downloadDir);
+	}
+	
+	
 	var out = fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip'));
+	
 	req.pipe(out);
 	req.on('end', function() {
-		console.log('all done');
-		var appName = packageName
-		console.log(appName);
+		console.log('all doneeee');
+		// var appName = packageName
+		// console.log(appName);
 		decompressZip(args);
 	})
 
@@ -130,16 +138,16 @@ function decompressZip(args) {
 	var dir = path.join(appSpaceHome, "downloads");
 
 	var unzipper = new DecompressZip(path.join(dir, 'package.zip'));
-
+	
 	unzipper.on('error', function(err) {
 		console.log('Caught an error');
 		console.log(err);
 	});
-
+	
 	unzipper.on('extract', function(log) {
 		console.log('Finished extracting');
 		console.log(log);
-
+	
 		var sourceDirectory = path.join(appSpaceHome, 'downloads', packageName + '-master');
 		var directory = path.join(appSpaceHome, packageName)
 		ncp.limit = 16;
@@ -149,21 +157,21 @@ function decompressZip(args) {
 			}
 			console.log('done!');
 			fs.unlinkSync(path.join(dir, 'package.zip'));
-			rimraf(sourceDirectory, function() {
+			rimraf(dir, function() {
 				console.log("done");
 			});
-
-
+	
+	
 		});
 		//fs.unlinkSync(path.join(dir,'package.zip'));
 		//createDynamicWindow(path.join(dir,'index.html'));
 	});
-
+	
 	unzipper.on('progress', function(fileIndex, fileCount) {
 		console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
 	});
-
-
+	
+	
 	console.log('unizipping to ');
 	console.log(dir);
 	unzipper.extract({
