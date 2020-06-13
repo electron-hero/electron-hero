@@ -64,8 +64,9 @@
     $(document).ready(function() {
         let reply;
         //let homeDirectory = path.join(app.getPath('documents'), 'electron_hero_apps');
+        let appSpaceHome = ipc.sendSync('getAppSpaceHome');
 
-        reply = getSubDirectories(homeDirectory);
+        reply = getSubDirectories(appSpaceHome);
         _.each(reply, function(item) {
             if (item.substr(0, 1) != '.') {
                 $('#customAppSpaces').append(`<option value="${item}">${item}</option>`);
