@@ -101,13 +101,10 @@ function updateStatusMessage(message){
 
 function downloadAndExtractZip(args) {
 	updateStatusMessage('Checking install directory...')
-	var packageName = args.packageName;
+	packageName = args.packageName;
 	var url = args.url;
 
-	console.log(packageName);
-	console.log(url);
-
-	var dir = path.join(appSpaceHome, packageName + '');
+	dir = path.join(appSpaceHome, packageName + '');
 	if (!fs.existsSync(dir)) {
 		fs.mkdirSync(dir);
 	}
@@ -141,21 +138,32 @@ function downloadAndExtractZip(args) {
 function installPackage(args) {
 	updateStatusMessage('Downloading package...')
 
-	var req = request({
-		method: 'GET',
-		uri: args.url
-	})
-
 	var downloadDir = path.join(appSpaceHome, 'downloads');
 	if (!fs.existsSync(downloadDir)) {
 		fs.mkdirSync(downloadDir);
 	};
 	
-	var out = fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip'));
-	req.pipe(out);
-	req.on('end', function() {
-		decompressZip(args);
-	})
+	try {
+		var req = request({
+			method: 'GET',
+			uri: args.url
+		})
+		.pipe(fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip')))
+		.on('end', function() {
+			decompressZip(args);
+		})
+	} catch(err) {
+		updateStatusMessage('');
+		rimraf(downloadDir, function() {
+			rimraf(dir, function(){
+				dialog.showMessageBoxSync({
+					'message': 'Invalid App Url',
+					'type': 'error'
+				})
+			})
+		})
+		
+	}
 }
 
 function decompressZip(args) {
