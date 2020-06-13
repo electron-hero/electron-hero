@@ -1,7 +1,8 @@
 // Modules to control application life and create native browser window
 const {
 	app,
-	BrowserWindow
+	BrowserWindow,
+	dialog
 } = require('electron')
 const path = require('path')
 const request = require("request");
@@ -97,35 +98,43 @@ function downloadAndExtractZip(args) {
 	if (!fs.existsSync(dir)) {
 		fs.mkdirSync(dir);
 	}
+	
+	fs.readdir(dir, function(err, files) {
+		if (err) {
+			// some sort of error
+		} else {
+			if (files.length) {
+				var selection = dialog.showMessageBoxSync({
+					'message':'Warning',
+					'detail':'Directory is not empty.  Cancel to abort, OK to install over existing code',
+					'type':'warning',
+					'buttons': ['Cancel','OK'],
+					'defaultId': 1
+				})
+				if (selection === 0) {
+					return false;
+				} else {
+					var req = request({
+						method: 'GET',
+						uri: url
+					})
+					
+					var downloadDir = path.join(appSpaceHome, 'downloads');
+					if (!fs.existsSync(downloadDir)) {
+						fs.mkdirSync(downloadDir);
+					}
+					
+					var out = fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip'));
+					req.pipe(out);
+					req.on('end', function() {
+						decompressZip(args);
+					})
+					
+				}
+			}
+		}
+	});
 
-	// const file = fs.createWriteStream(dir + '/package.zip');
-	// http.get(url, response => {
-	// 	var stream = response.pipe(file);
-	// 	stream.on("finish", function() {
-	// 		console.log("done");
-	// 		decompressZip(args);
-	// 	});
-	// });
-	var req = request({
-		method: 'GET',
-		uri: url
-	})
-	
-	var downloadDir = path.join(appSpaceHome, 'downloads');
-	if (!fs.existsSync(downloadDir)) {
-		fs.mkdirSync(downloadDir);
-	}
-	
-	
-	var out = fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip'));
-	
-	req.pipe(out);
-	req.on('end', function() {
-		console.log('all doneeee');
-		// var appName = packageName
-		// console.log(appName);
-		decompressZip(args);
-	})
 
 
 }
@@ -133,20 +142,16 @@ function downloadAndExtractZip(args) {
 
 function decompressZip(args) {
 
-	console.log('here in decompressZip')
 	var packageName = args.packageName;
 	var dir = path.join(appSpaceHome, "downloads");
 
 	var unzipper = new DecompressZip(path.join(dir, 'package.zip'));
 	
 	unzipper.on('error', function(err) {
-		console.log('Caught an error');
 		console.log(err);
 	});
 	
 	unzipper.on('extract', function(log) {
-		console.log('Finished extracting');
-		console.log(log);
 	
 		var sourceDirectory = path.join(appSpaceHome, 'downloads', packageName + '-master');
 		var directory = path.join(appSpaceHome, packageName)
@@ -155,14 +160,18 @@ function decompressZip(args) {
 			if (err) {
 				return console.error(err);
 			}
-			console.log('done!');
 			fs.unlinkSync(path.join(dir, 'package.zip'));
 			rimraf(dir, function() {
-				console.log("done");
+				//alert('App installed');
+				dialog.showMessageBoxSync({
+					'message':'App Installed',
+					'type':'info'
+				})
 			});
 	
 	
 		});
+		
 		//fs.unlinkSync(path.join(dir,'package.zip'));
 		//createDynamicWindow(path.join(dir,'index.html'));
 	});
@@ -172,8 +181,6 @@ function decompressZip(args) {
 	});
 	
 	
-	console.log('unizipping to ');
-	console.log(dir);
 	unzipper.extract({
 		path: dir,
 		filter: function(file) {
