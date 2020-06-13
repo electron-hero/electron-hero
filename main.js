@@ -23,9 +23,9 @@ var mainWindow;
 var devSpaceHome;
 
 // this is used when building for publish
-//var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
+var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
 // this is used to point to the source files under source control
-var appSpaceHome = path.join(__dirname, 'app_spaces');
+//var appSpaceHome = path.join(__dirname, 'app_spaces');
 
 
 let homeRequirePath = __dirname + path.sep;
