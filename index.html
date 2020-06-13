@@ -19,6 +19,7 @@
         const _ = require('lodash');
         const request = require('request');
         const app = require('electron').remote.app
+        const { ipcRenderer } = require('electron')
     </script>
     <script src="my.js" charset="utf-8"></script>
 
@@ -52,6 +53,8 @@
                             <input type=text id='gitRepoUrl' class='form-control form-control-relative' placeholder="git://" />
                             <button class="btn btn-large btn-positive" onclick="doGitInstall()">Install</button>&nbsp;
                         </div>
+                        <br><br>
+                        <span id='installStatus'></span>
                     </div>
                 </div>
             </div>
@@ -65,6 +68,10 @@
         let reply;
         //let homeDirectory = path.join(app.getPath('documents'), 'electron_hero_apps');
         let appSpaceHome = ipc.sendSync('getAppSpaceHome');
+
+        ipcRenderer.on('updateStatus', function(event, args) {
+            $('#installStatus').html(args.message);
+        })
 
         reply = getSubDirectories(appSpaceHome);
         _.each(reply, function(item) {

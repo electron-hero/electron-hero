@@ -21,6 +21,8 @@ const extract = require('extract-zip')
 
 var mainWindow;
 var devSpaceHome;
+var packageName;
+var dir;
 
 // this is used when building for publish
 var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
@@ -90,8 +92,15 @@ ipc.on('setAppSpaceHome', (event, args) => {
 })
 
 
+function updateStatusMessage(message){
+	//$('#installStatus').html(message);
+	mainWindow.webContents.send('updateStatus', {
+		'message':message
+	})
+}
 
 function downloadAndExtractZip(args) {
+	updateStatusMessage('Checking install directory...')
 	var packageName = args.packageName;
 	var url = args.url;
 
@@ -102,89 +111,79 @@ function downloadAndExtractZip(args) {
 	if (!fs.existsSync(dir)) {
 		fs.mkdirSync(dir);
 	}
-	
+
 	fs.readdir(dir, function(err, files) {
 		if (err) {
 			// some sort of error
 		} else {
 			if (files.length) {
 				var selection = dialog.showMessageBoxSync({
-					'message':'Warning',
-					'detail':'Directory is not empty.  Cancel to abort, OK to install over existing code',
-					'type':'warning',
-					'buttons': ['Cancel','OK'],
+					'message': 'Warning',
+					'detail': 'Directory is not empty.  Cancel to abort, OK to install over existing files',
+					'type': 'warning',
+					'buttons': ['Cancel', 'OK'],
 					'defaultId': 1
 				})
 				if (selection === 0) {
 					return false;
 				} else {
-					var req = request({
-						method: 'GET',
-						uri: url
-					})
-					
-					var downloadDir = path.join(appSpaceHome, 'downloads');
-					if (!fs.existsSync(downloadDir)) {
-						fs.mkdirSync(downloadDir);
-					}
-					
-					var out = fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip'));
-					req.pipe(out);
-					req.on('end', function() {
-						decompressZip(args);
-					})
-					
+					rimraf(dir, function() {
+						installPackage(args);
+					});
 				}
+			} else {
+				installPackage(args);
 			}
 		}
 	});
-
-
-
 }
 
+function installPackage(args) {
+	updateStatusMessage('Downloading package...')
+
+	var req = request({
+		method: 'GET',
+		uri: args.url
+	})
+
+	var downloadDir = path.join(appSpaceHome, 'downloads');
+	if (!fs.existsSync(downloadDir)) {
+		fs.mkdirSync(downloadDir);
+	};
+	
+	var out = fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip'));
+	req.pipe(out);
+	req.on('end', function() {
+		decompressZip(args);
+	})
+}
 
 function decompressZip(args) {
+	updateStatusMessage('Extracting files...')
 
-	var packageName = args.packageName;
-	var dir = path.join(appSpaceHome, "downloads");
+	packageName = args.packageName;
+	dir = path.join(appSpaceHome, "downloads");
 
 	var unzipper = new DecompressZip(path.join(dir, 'package.zip'));
-	
+
 	unzipper.on('error', function(err) {
 		console.log(err);
 	});
-	
+
 	unzipper.on('extract', function(log) {
-	
-		var sourceDirectory = path.join(appSpaceHome, 'downloads', packageName + '-master');
-		var directory = path.join(appSpaceHome, packageName)
-		ncp.limit = 16;
-		ncp(sourceDirectory, directory, function(err) {
-			if (err) {
-				return console.error(err);
-			}
-			fs.unlinkSync(path.join(dir, 'package.zip'));
-			rimraf(dir, function() {
-				//alert('App installed');
-				dialog.showMessageBoxSync({
-					'message':'App Installed',
-					'type':'info'
-				})
-			});
-	
-	
-		});
-		
+
+		console.log('here in extract...')
+		setTimeout(cleanupAfterInstall,10);
 		//fs.unlinkSync(path.join(dir,'package.zip'));
 		//createDynamicWindow(path.join(dir,'index.html'));
 	});
-	
+
 	unzipper.on('progress', function(fileIndex, fileCount) {
 		console.log('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount);
+		//updateStatusMessage('Extracted file ' + (fileIndex + 1) + ' of ' + fileCount)
 	});
-	
-	
+
+
 	unzipper.extract({
 		path: dir,
 		filter: function(file) {
@@ -194,9 +193,31 @@ function decompressZip(args) {
 
 }
 
+function cleanupAfterInstall() {
+	updateStatusMessage('Cleaning up files...');
+	sourceDirectory = path.join(appSpaceHome, 'downloads', packageName + '-master');
+	directory = path.join(appSpaceHome, packageName)
+	ncp.limit = 16;
+	ncp(sourceDirectory, directory, function(err) {
+		if (err) {
+			return console.error(err);
+			console.log(err);
+		}
+		var resp = fs.unlinkSync(path.join(dir, 'package.zip'));
+		rimraf(dir, function() {
+			//alert('App installed');
+			updateStatusMessage('');
+			dialog.showMessageBoxSync({
+				'message': 'App Installed',
+				'type': 'info'
+			})
+		});
+	});
+}
+
 function createWindow() {
 	// Create the browser window.
-	const mainWindow = new BrowserWindow({
+	mainWindow = new BrowserWindow({
 		width: 700,
 		height: 400,
 		backgroundColor: '#f0f0f0',
@@ -211,8 +232,8 @@ function createWindow() {
 
 	// and load the index.html of the app.
 	var dir = appSpaceHome;
-	if (!fs.existsSync(dir)){
-	    fs.mkdirSync(dir);
+	if (!fs.existsSync(dir)) {
+		fs.mkdirSync(dir);
 		fs.mkdirSync(path.join(dir, 'downloads'));
 	}
 
