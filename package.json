@@ -1,6 +1,6 @@
 {
     "name": "ElectronHero",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "An experiment in efficiency",
     "main": "main.js",
     "scripts": {
@@ -57,8 +57,7 @@
                 ],
                 "icon": "icons/app_icon.icns"
             },
-            "makers": [
-                {
+            "makers": [{
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
                         "name": "electron_hero"
