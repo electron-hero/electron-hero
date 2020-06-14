@@ -14,10 +14,22 @@ let homeDirectory = path.join(app.getPath('documents'), 'electron_hero_apps');
 
 
 function appDropDownChange() {
-	
-	let workingDirectory = path.join(__dirname, 'app_spaces', $('#customAppSpaces').val() )
-}
+	let packageJson = path.join(homeDirectory, $('#customAppSpaces').val(), 'package.json')
+	fs.readFile(packageJson, 'utf8', function(err, contents) {
 
+		try {
+			contents = JSON.parse(contents);
+			if (contents && contents.repository && contents.repository.url) {
+				$('#gitRepoUrl').val(contents.repository.url);
+			} else {
+				$('#gitRepoUrl').val('');
+			}
+		} catch (err) {
+			$('#gitRepoUrl').val('');
+		}
+
+	})
+}
 
 
 function handleClick(filename) {
@@ -50,7 +62,7 @@ function downloadFile(filename) {
 }
 
 function doGitInstall() {
-	
+
 	// git.cwd(path.join(__dirname, 'app_spaces'))
 	var downloadUrl = $('#gitRepoUrl').val() + '/archive/master.zip';
 	console.log(downloadUrl);
@@ -61,7 +73,7 @@ function doGitInstall() {
 	}
 	console.log(info);
 	let reply = ipc.sendSync('downloadPackage', info);
-	
+
 
 
 	// git.clone(repoPath, function(err, data) {
@@ -79,10 +91,10 @@ function runAppSpace(space) {
 	// const mainWindow = new BrowserWindow(contents);
 	// mainWindow.loadFile(devHomeDirectory + $('#customAppSpaces').val() + '/index.html')
 	if (space === 'apps') {
-		let reply = ipc.sendSync('runAppSpace', path.join(homeDirectory , $('#customAppSpaces').val()));
+		let reply = ipc.sendSync('runAppSpace', path.join(homeDirectory, $('#customAppSpaces').val()));
 	}
 	if (space === 'devapps') {
-		let reply = ipc.sendSync('runAppSpace', path.join(devHomeDirectory , $('#customAppSpaces').val()));
+		let reply = ipc.sendSync('runAppSpace', path.join(devHomeDirectory, $('#customAppSpaces').val()));
 	}
 
 }
@@ -134,13 +146,13 @@ function selectCustomAppSpaceHome() {
 
 function getSubDirectories(_path) {
 	console.log(_path);
-	
+
 	var dirs = [];
 	var info = fs.readdirSync(_path);
 	_.each(info, function(item) {
 		console.log('looking...');
 		if (item.substr(0, 1) != '.') {
-			if (path.extname(path.join(_path,item)) == '') {
+			if (path.extname(path.join(_path, item)) == '') {
 				dirs.push(item);
 			}
 		}
@@ -153,7 +165,7 @@ function getAppSpaces() {
 	var info = fs.readdirSync(devHomeDirectory);
 	_.each(info, function(item) {
 		if (item.substr(0, 1) != '.') {
-			if (path.extname(path.join(devHomeDirectory,item)) == '') {
+			if (path.extname(path.join(devHomeDirectory, item)) == '') {
 				dirs.push(item);
 			}
 		}
@@ -179,7 +191,7 @@ function createAppSpace() {
 
 function deleteAppSpace() {
 	var appSpaceName = $('#customAppSpaces').val();
-	var path = path.join(__dirname, devHomeDirectory , appSpaceName);
+	var path = path.join(__dirname, devHomeDirectory, appSpaceName);
 	deleteFolderRecursive(path);
 }
 
