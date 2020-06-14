@@ -10,7 +10,7 @@ const ipc = require('electron').ipcMain;
 const ncp = require('ncp');
 const rimraf = require("rimraf");
 
-var http = require('http');
+var https = require('https');
 var fs = require('fs');
 var url = require('url');
 var _ = require('lodash');
@@ -111,7 +111,7 @@ function downloadAndExtractZip(args) {
 
 	fs.readdir(dir, function(err, files) {
 		if (err) {
-			// some sort of error
+			console.log(err);
 		} else {
 			if (files.length) {
 				var selection = dialog.showMessageBoxSync({
@@ -144,20 +144,22 @@ function installPackage(args) {
 	};
 	
 	try {
-		var req = request({
-			method: 'GET',
-			uri: args.url
-		})
-		.pipe(fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip')))
-		.on('end', function() {
+		request(args.url)
+		  .pipe(fs.createWriteStream(path.join(appSpaceHome, 'downloads', 'package.zip')))
+		  .on('close', function () {
+		    console.log('File written!');
 			decompressZip(args);
-		})
+		  });		
+
 	} catch(err) {
+		console.log(err.message);
 		updateStatusMessage('');
 		rimraf(downloadDir, function() {
 			rimraf(dir, function(){
+				updateStatusMessage('')
 				dialog.showMessageBoxSync({
-					'message': 'Invalid App Url',
+					'message': 'Download Error',
+					'detail': err.message,
 					'type': 'error'
 				})
 			})
