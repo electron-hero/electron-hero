@@ -122,6 +122,7 @@ function downloadAndExtractZip(args) {
 					'defaultId': 1
 				})
 				if (selection === 0) {
+					updateStatusMessage('')
 					return false;
 				} else {
 					rimraf(dir, function() {
