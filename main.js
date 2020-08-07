@@ -30,6 +30,8 @@ var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
 //var appSpaceHome = path.join(__dirname, 'app_spaces');
 
 
+require('update-electron-app')();
+
 console.log('args');
 console.log(process.argv);
 

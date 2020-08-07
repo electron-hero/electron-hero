@@ -1,6 +1,6 @@
 {
     "name": "ElectronHero",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "An experiment in efficiency",
     "main": "main.js",
     "scripts": {
@@ -8,7 +8,7 @@
         "package": "electron-forge package",
         "make": "electron-forge make"
     },
-    "repository": "https://github.com/electron/electron-quick-start",
+    "repository": "https://github.com/electron-hero/electron-hero/",
     "keywords": [
         "Electron",
         "quick",
@@ -24,7 +24,7 @@
         "@electron-forge/maker-rpm": "^6.0.0-beta.51",
         "@electron-forge/maker-squirrel": "^6.0.0-beta.51",
         "@electron-forge/maker-zip": "^6.0.0-beta.51",
-        "electron": "^8.2.0"
+        "electron": "^8.5.0"
     },
     "dependencies": {
         "auth0-js": "^9.13.2",
@@ -49,6 +49,7 @@
         "shelljs": "^0.8.3",
         "simple-git": "^1.132.0",
         "stream": "0.0.2",
+        "update-electron-app": "^1.5.0",
         "url": "^0.11.0",
         "xml-formatter": "^2.0.1"
     },
