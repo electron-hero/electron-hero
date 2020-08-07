@@ -30,6 +30,12 @@ var appSpaceHome = path.join(app.getPath('documents'), 'electron_hero_apps');
 //var appSpaceHome = path.join(__dirname, 'app_spaces');
 
 
+require('update-electron-app')();
+
+console.log('args');
+console.log(process.argv);
+
+
 let homeRequirePath = __dirname + path.sep;
 
 ipc.on('getRequirePath', (event, args) => {
@@ -53,6 +59,11 @@ ipc.on('downloadPackage', (event, args) => {
 	event.returnValue = 'ok';
 	downloadAndExtractZip(args);
 });
+
+app.on('window-all-closed', () => {
+	app.dock.hide();
+	app.quit();
+})
 
 ipc.on('runDevApp', (event, args) => {
 
@@ -228,32 +239,42 @@ function cleanupAfterInstall() {
 
 function createWindow() {
 	// Create the browser window.
-	mainWindow = new BrowserWindow({
-		width: 700,
-		height: 400,
-		backgroundColor: '#f0f0f0',
-		webPreferences: {
-			preload: path.join(__dirname, 'preload.js')
-		},
-		webPreferences: {
-			nodeIntegration: true
-		},
-		icon: path.join(__dirname, "icon.icns")
-	})
 
-	// and load the index.html of the app.
-	var dir = appSpaceHome;
-	if (!fs.existsSync(dir)) {
-		fs.mkdirSync(dir);
-		fs.mkdirSync(path.join(dir, 'downloads'));
+	const args = process.argv;
+	if (args.length > 1 && args[1] != '.') {
+
+		var appName = args[1];
+		var windowInfo = JSON.parse(fs.readFileSync(path.join(appSpaceHome, appName, 'mainWindow.json')));
+		var newWindow = new BrowserWindow(windowInfo);
+		newWindow.loadFile(path.join(appSpaceHome, appName, 'index.html'));
+
+	} else {
+
+		mainWindow = new BrowserWindow({
+			width: 700,
+			height: 400,
+			backgroundColor: '#f0f0f0',
+			webPreferences: {
+				preload: path.join(__dirname, 'preload.js')
+			},
+			webPreferences: {
+				nodeIntegration: true
+			},
+			icon: path.join(__dirname, "icon.icns")
+		})
+
+		// and load the index.html of the app.
+		var dir = appSpaceHome;
+		if (!fs.existsSync(dir)) {
+			fs.mkdirSync(dir);
+			fs.mkdirSync(path.join(dir, 'downloads'));
+		}
+		mainWindow.loadFile('index.html')
+		app.dock.show();
+		// Open the DevTools.
+		// mainWindow.webContents.openDevTools()
+		
 	}
-
-
-	mainWindow.loadFile('index.html')
-
-
-	// Open the DevTools.
-	// mainWindow.webContents.openDevTools()
 }
 
 

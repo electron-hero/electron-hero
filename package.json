@@ -1,6 +1,6 @@
 {
     "name": "ElectronHero",
-    "version": "1.0.6",
+    "version": "1.0.8",
     "description": "An experiment in efficiency",
     "main": "main.js",
     "scripts": {
@@ -8,7 +8,7 @@
         "package": "electron-forge package",
         "make": "electron-forge make"
     },
-    "repository": "https://github.com/electron/electron-quick-start",
+    "repository": "https://github.com/electron-hero/electron-hero/",
     "keywords": [
         "Electron",
         "quick",
@@ -24,20 +24,23 @@
         "@electron-forge/maker-rpm": "^6.0.0-beta.51",
         "@electron-forge/maker-squirrel": "^6.0.0-beta.51",
         "@electron-forge/maker-zip": "^6.0.0-beta.51",
-        "electron": "^8.2.0"
+        "electron": "^8.5.0"
     },
     "dependencies": {
         "auth0-js": "^9.13.2",
         "auth0-lock": "^11.23.1",
         "decompress-zip": "^0.2.2",
+        "desktop-idle": "^1.3.0",
         "electron-squirrel-startup": "^1.0.0",
         "electron-tree-view": "^1.1.0",
         "extract-zip": "^2.0.0",
         "http": "0.0.1-security",
         "https": "^1.0.0",
+        "iohook": "^0.6.5",
         "jquery": "^3.5.0",
         "js-beautify": "^1.11.0",
-        "lodash": "^4.17.15",
+        "keytar": "^6.0.1",
+        "lodash": ">=4.17.19",
         "moment": "^2.24.0",
         "ncp": "^2.0.0",
         "path": "^0.12.7",
@@ -46,12 +49,26 @@
         "shelljs": "^0.8.3",
         "simple-git": "^1.132.0",
         "stream": "0.0.2",
+        "update-electron-app": "^1.5.0",
         "url": "^0.11.0",
         "xml-formatter": "^2.0.1"
     },
     "config": {
         "forge": {
             "packagerConfig": {
+                "osxSign": {
+                    "identity": "Developer ID Application: John ANDERSON (2FJU5Q8XK6)",
+                    "hardened-runtime": true,
+                    "entitlements": "entitlements.plist",
+                    "entitlements-inherit": "entitlements.plist",
+                    "signature-flags": "library"
+                },
+                "osxNotarize": {
+                    "appleId": "info@ti-browser.com",
+                    "appleIdPassword": "kxec-azii-sckp-xiqm",
+                    "ascProvider": "JohnANDERSON299474967",
+                    "hardenedRuntime": true
+                },
                 "ignore": [
                     "app_spaces"
                 ],
