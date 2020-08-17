@@ -1,6 +1,6 @@
 {
     "name": "ElectronHero",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "An experiment in efficiency",
     "main": "main.js",
     "scripts": {
@@ -19,12 +19,12 @@
     "author": "andersjj@yahoo.com",
     "license": "CC0-1.0",
     "devDependencies": {
-        "@electron-forge/cli": "^6.0.0-beta.51",
-        "@electron-forge/maker-deb": "^6.0.0-beta.51",
-        "@electron-forge/maker-rpm": "^6.0.0-beta.51",
-        "@electron-forge/maker-squirrel": "^6.0.0-beta.51",
-        "@electron-forge/maker-zip": "^6.0.0-beta.51",
-        "electron": "^8.5.0"
+        "@electron-forge/cli": "^6.0.0-beta.52",
+        "@electron-forge/maker-deb": "^6.0.0-beta.52",
+        "@electron-forge/maker-rpm": "^6.0.0-beta.52",
+        "@electron-forge/maker-squirrel": "^6.0.0-beta.52",
+        "@electron-forge/maker-zip": "^6.0.0-beta.52",
+        "electron": "^9.2.0"
     },
     "dependencies": {
         "auth0-js": "^9.13.2",
@@ -74,7 +74,8 @@
                 ],
                 "icon": "icons/app_icon.icns"
             },
-            "makers": [{
+            "makers": [
+                {
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
                         "name": "electron_hero"

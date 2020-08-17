@@ -250,6 +250,8 @@ function createWindow() {
 
 	} else {
 
+
+	try {
 		mainWindow = new BrowserWindow({
 			width: 700,
 			height: 400,
@@ -260,7 +262,7 @@ function createWindow() {
 			webPreferences: {
 				nodeIntegration: true
 			},
-			icon: path.join(__dirname, "icon.icns")
+			//icon: path.join(__dirname, "icon.icns")
 		})
 
 		// and load the index.html of the app.
@@ -273,7 +275,11 @@ function createWindow() {
 		app.dock.show();
 		// Open the DevTools.
 		// mainWindow.webContents.openDevTools()
-		
+	} catch (err) {
+		console.log(err);
+	}
+
+
 	}
 }
 
