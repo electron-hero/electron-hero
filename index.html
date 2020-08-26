@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/photon.css">
     <link rel="stylesheet" href="css/electron-hero.css">
     <script src="components/utils/index.js"></script>
+    <script src="contextMenu.js"></script>
 
     <script>
 
@@ -50,7 +51,7 @@
                         </div>
                         <div class="hint-text">To install a new app, enter the git url and click Install</div>
                         <div>
-                            <input type=text id='gitRepoUrl' class='form-control form-control-relative' placeholder="git://" />
+                            <input type=text id='gitRepoUrl' class='form-control form-control-relative gitRepoUrl' placeholder="Right click for samples available" />
                             <button class="btn btn-large btn-positive" onclick="doGitInstall()">Install</button>&nbsp;
                         </div>
                         <br><br>
@@ -79,6 +80,18 @@
                 $('#customAppSpaces').append(`<option value="${item}">${item}</option>`);
             }
         })
+
+        $.ajax("https://api.github.com/orgs/electron-hero-apps/repos")
+            .done(function(data) {
+                var resp = [];
+                _.each(data, function(item) {
+                    resp.push({
+                        repoUrl: item.html_url,
+                        repoName: item.name
+                    })
+                })
+                setupContextMenu(_.orderBy(resp, ['repoName']));
+            })
     });
 </script>
 
