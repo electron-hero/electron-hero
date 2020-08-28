@@ -237,20 +237,8 @@ function cleanupAfterInstall() {
 	});
 }
 
-function createWindow() {
-	// Create the browser window.
 
-	const args = process.argv;
-	if (args.length > 1 && args[1] != '.') {
-
-		var appName = args[1];
-		var windowInfo = JSON.parse(fs.readFileSync(path.join(appSpaceHome, appName, 'mainWindow.json')));
-		var newWindow = new BrowserWindow(windowInfo);
-		newWindow.loadFile(path.join(appSpaceHome, appName, 'index.html'));
-
-	} else {
-
-
+function openMainConsole() {
 	try {
 		mainWindow = new BrowserWindow({
 			width: 700,
@@ -278,8 +266,24 @@ function createWindow() {
 	} catch (err) {
 		console.log(err);
 	}
+	
+}
 
+function createWindow() {
+	// Create the browser window.
+	const args = process.argv;
+	if (args.length > 1 && args[1] != '.') {
+		var appName = args[1];
+		if (fs.existsSync( path.join(appSpaceHome, appName, 'mainWindow.json'))) {
+			var windowInfo = JSON.parse(fs.readFileSync(path.join(appSpaceHome, appName, 'mainWindow.json')));
+			var newWindow = new BrowserWindow(windowInfo);
+			newWindow.loadFile(path.join(appSpaceHome, appName, 'index.html'));			
+		} else {
+			openMainConsole();
+		}
 
+	} else {
+		openMainConsole()
 	}
 }
 
