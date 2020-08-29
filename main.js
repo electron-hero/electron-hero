@@ -231,8 +231,11 @@ function cleanupAfterInstall() {
 			updateStatusMessage('');
 			dialog.showMessageBoxSync({
 				'message': 'App Installed',
+				'detail': 'Select App from dropdown and hit Run',
 				'type': 'info'
 			})
+  			mainWindow.webContents.send('installComplete');
+
 		});
 	});
 }

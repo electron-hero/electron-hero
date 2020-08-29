@@ -52,7 +52,7 @@
                         <div class="hint-text">To install a new app, enter the git url and click Install</div>
                         <div>
                             <input type=text id='gitRepoUrl' class='form-control form-control-relative gitRepoUrl' placeholder="Right click for samples available" />
-                            <button class="btn btn-large btn-positive" onclick="doGitInstall()">Install</button>&nbsp;
+                            <button class="btn btn-large btn-positive" onclick="installNewApp()">Install</button>&nbsp;
                         </div>
                         <br><br>
                         <span id='installStatus'></span>
@@ -66,21 +66,10 @@
 
 <script>
     $(document).ready(function() {
-        let reply;
-        //let homeDirectory = path.join(app.getPath('documents'), 'electron_hero_apps');
-        let appSpaceHome = ipc.sendSync('getAppSpaceHome');
-
+        refreshAppDropDown();
         ipcRenderer.on('updateStatus', function(event, args) {
             $('#installStatus').html(args.message);
         })
-
-        reply = getSubDirectories(appSpaceHome);
-        _.each(reply, function(item) {
-            if (item.substr(0, 1) != '.') {
-                $('#customAppSpaces').append(`<option value="${item}">${item}</option>`);
-            }
-        })
-
         $.ajax("https://api.github.com/orgs/electron-hero-apps/repos")
             .done(function(data) {
                 var resp = [];
@@ -92,6 +81,29 @@
                 })
                 setupContextMenu(_.orderBy(resp, ['repoName']));
             })
+    });
+
+    function refreshAppDropDown() {
+        let reply;
+        let appSpaceHome = ipc.sendSync('getAppSpaceHome');
+        $('#customAppSpaces').empty();
+        $('#customAppSpaces').append(`<option>Select Space</option>`);
+
+        reply = getSubDirectories(appSpaceHome);
+        _.each(reply, function(item) {
+            if (item.substr(0, 1) != '.') {
+                $('#customAppSpaces').append(`<option value="${item}">${item}</option>`);
+            }
+        })
+    }
+
+    function installNewApp() {
+        doGitInstall()
+    }
+
+    require('electron').ipcRenderer.on('installComplete', function(event, message) {
+        console.log('event');
+        refreshAppDropDown();
     });
 </script>
 
