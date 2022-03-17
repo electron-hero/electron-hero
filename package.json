@@ -47,7 +47,7 @@
         "request": "^2.88.2",
         "rimraf": "^3.0.2",
         "shelljs": "^0.8.3",
-        "simple-git": "^1.132.0",
+        "simple-git": "^3.3.0",
         "stream": "0.0.2",
         "update-electron-app": "^1.5.0",
         "url": "^0.11.0",
